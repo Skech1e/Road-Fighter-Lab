@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CarMechanics : MonoBehaviour
 {
     CarControls carControls;
-    Vector2 move;
+    [SerializeField]Vector2 move;
     float speed;
     Rigidbody2D rigidBodyCar;
     private void Awake()
@@ -30,7 +28,10 @@ public class CarMechanics : MonoBehaviour
 
     void Movement()
     {
-        move = carControls.Car.Move.ReadValue<Vector2>() * speed;
-        rigidBodyCar.velocity = move;
+        move = carControls.Car.Move.ReadValue<Vector2>();
+        move.y++;
+        rigidBodyCar.transform.position = move;
+        rigidBodyCar.velocity = Vector2.up * speed;
+
     }
 }

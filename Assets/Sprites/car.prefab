@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8250753111143783660}
   - component: {fileID: 193057059638864916}
   - component: {fileID: 2002763498143196628}
-  - component: {fileID: 8797513844303564339}
+  - component: {fileID: 8797513844303564348}
   m_Layer: 0
   m_Name: car
   m_TagString: Untagged
@@ -124,7 +124,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8797513844303564339
+--- !u!114 &8797513844303564348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
