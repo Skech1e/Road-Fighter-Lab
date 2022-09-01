@@ -44,6 +44,15 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Button"",
+                    ""id"": ""a569ccdc-f83b-4af0-ae5d-a8cedc97d8dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -90,6 +99,39 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""2966f56f-8d40-4f9c-aaf6-b3af94392b29"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=0.69)"",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""30ef5e32-2136-4725-88cf-715d43235225"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""8216023b-6b09-495e-a939-402338226ec4"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -100,6 +142,7 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
         m_Car = asset.FindActionMap("Car", throwIfNotFound: true);
         m_Car_Move = m_Car.FindAction("Move", throwIfNotFound: true);
         m_Car_Fire = m_Car.FindAction("Fire", throwIfNotFound: true);
+        m_Car_Boost = m_Car.FindAction("Boost", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -161,12 +204,14 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
     private ICarActions m_CarActionsCallbackInterface;
     private readonly InputAction m_Car_Move;
     private readonly InputAction m_Car_Fire;
+    private readonly InputAction m_Car_Boost;
     public struct CarActions
     {
         private @CarControls m_Wrapper;
         public CarActions(@CarControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Car_Move;
         public InputAction @Fire => m_Wrapper.m_Car_Fire;
+        public InputAction @Boost => m_Wrapper.m_Car_Boost;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -182,6 +227,9 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                 @Fire.started -= m_Wrapper.m_CarActionsCallbackInterface.OnFire;
                 @Fire.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnFire;
                 @Fire.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnFire;
+                @Boost.started -= m_Wrapper.m_CarActionsCallbackInterface.OnBoost;
+                @Boost.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnBoost;
+                @Boost.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnBoost;
             }
             m_Wrapper.m_CarActionsCallbackInterface = instance;
             if (instance != null)
@@ -192,6 +240,9 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
+                @Boost.started += instance.OnBoost;
+                @Boost.performed += instance.OnBoost;
+                @Boost.canceled += instance.OnBoost;
             }
         }
     }
@@ -200,5 +251,6 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnBoost(InputAction.CallbackContext context);
     }
 }

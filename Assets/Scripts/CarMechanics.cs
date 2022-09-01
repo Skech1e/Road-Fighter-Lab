@@ -4,12 +4,13 @@ public class CarMechanics : MonoBehaviour
 {
     CarControls carControls;
     [SerializeField]Vector2 move;
-    float speed;
+    [SerializeField] float speed;
+    [SerializeField] float boost;
     Rigidbody2D rigidBodyCar;
     private void Awake()
     {
         carControls = new CarControls();
-        speed = 10f;
+        speed = 15f;
         rigidBodyCar = GetComponent<Rigidbody2D>();
     }
 
@@ -22,16 +23,17 @@ public class CarMechanics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         Movement();
     }
 
     void Movement()
     {
         move = carControls.Car.Move.ReadValue<Vector2>();
-        move.y++;
-        rigidBodyCar.transform.position = move;
-        rigidBodyCar.velocity = Vector2.up * speed;
+        move.y = Vector2.up.y;
+        boost = carControls.Car.Boost.ReadValue<float>();
+        boost++;
+        //rigidBodyCar.transform.position = move;
+        rigidBodyCar.velocity = move * (speed * boost);
 
     }
 }
