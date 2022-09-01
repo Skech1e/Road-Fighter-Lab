@@ -32,7 +32,6 @@ public class CarMechanics : MonoBehaviour
         move.y = Vector2.up.y;
         boost = carControls.Car.Boost.ReadValue<float>();
         boost++;
-        //rigidBodyCar.transform.position = move;
         rigidBodyCar.velocity = move * (speed * boost);
 
     }
