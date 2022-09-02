@@ -46,7 +46,7 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Boost"",
+                    ""name"": ""Boost/Slow"",
                     ""type"": ""Button"",
                     ""id"": ""a569ccdc-f83b-4af0-ae5d-a8cedc97d8dc"",
                     ""expectedControlType"": ""Button"",
@@ -101,13 +101,13 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""One Modifier"",
+                    ""name"": ""W"",
                     ""id"": ""2966f56f-8d40-4f9c-aaf6-b3af94392b29"",
                     ""path"": ""OneModifier"",
                     ""interactions"": """",
                     ""processors"": ""Scale(factor=0.69)"",
                     ""groups"": """",
-                    ""action"": ""Boost"",
+                    ""action"": ""Boost/Slow"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -118,7 +118,7 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Boost"",
+                    ""action"": ""Boost/Slow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -129,7 +129,40 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Boost"",
+                    ""action"": ""Boost/Slow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""S"",
+                    ""id"": ""4ee38bef-d868-48a4-87ab-800beae77ca2"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=-0.42)"",
+                    ""groups"": """",
+                    ""action"": ""Boost/Slow"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""9ea58d10-ab92-498e-a3d8-ad0c54684349"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost/Slow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""e2413ad0-054c-4d56-a826-248a3be68a13"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Boost/Slow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -142,7 +175,7 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
         m_Car = asset.FindActionMap("Car", throwIfNotFound: true);
         m_Car_Move = m_Car.FindAction("Move", throwIfNotFound: true);
         m_Car_Fire = m_Car.FindAction("Fire", throwIfNotFound: true);
-        m_Car_Boost = m_Car.FindAction("Boost", throwIfNotFound: true);
+        m_Car_BoostSlow = m_Car.FindAction("Boost/Slow", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -204,14 +237,14 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
     private ICarActions m_CarActionsCallbackInterface;
     private readonly InputAction m_Car_Move;
     private readonly InputAction m_Car_Fire;
-    private readonly InputAction m_Car_Boost;
+    private readonly InputAction m_Car_BoostSlow;
     public struct CarActions
     {
         private @CarControls m_Wrapper;
         public CarActions(@CarControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Car_Move;
         public InputAction @Fire => m_Wrapper.m_Car_Fire;
-        public InputAction @Boost => m_Wrapper.m_Car_Boost;
+        public InputAction @BoostSlow => m_Wrapper.m_Car_BoostSlow;
         public InputActionMap Get() { return m_Wrapper.m_Car; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -227,9 +260,9 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                 @Fire.started -= m_Wrapper.m_CarActionsCallbackInterface.OnFire;
                 @Fire.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnFire;
                 @Fire.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnFire;
-                @Boost.started -= m_Wrapper.m_CarActionsCallbackInterface.OnBoost;
-                @Boost.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnBoost;
-                @Boost.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnBoost;
+                @BoostSlow.started -= m_Wrapper.m_CarActionsCallbackInterface.OnBoostSlow;
+                @BoostSlow.performed -= m_Wrapper.m_CarActionsCallbackInterface.OnBoostSlow;
+                @BoostSlow.canceled -= m_Wrapper.m_CarActionsCallbackInterface.OnBoostSlow;
             }
             m_Wrapper.m_CarActionsCallbackInterface = instance;
             if (instance != null)
@@ -240,9 +273,9 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
-                @Boost.started += instance.OnBoost;
-                @Boost.performed += instance.OnBoost;
-                @Boost.canceled += instance.OnBoost;
+                @BoostSlow.started += instance.OnBoostSlow;
+                @BoostSlow.performed += instance.OnBoostSlow;
+                @BoostSlow.canceled += instance.OnBoostSlow;
             }
         }
     }
@@ -251,6 +284,6 @@ public partial class @CarControls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
-        void OnBoost(InputAction.CallbackContext context);
+        void OnBoostSlow(InputAction.CallbackContext context);
     }
 }
